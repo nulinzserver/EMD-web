@@ -36,26 +36,13 @@ docker-compose up -d --build
 docker-compose exec app composer install --no-dev --optimize-autoloader
 ```
 
-### 4. Setup Laravel
-```bash
-docker-compose exec app php artisan key:generate
-docker-compose exec app php artisan migrate --force
-docker-compose exec app php artisan config:cache
-docker-compose exec app php artisan route:cache
-docker-compose exec app php artisan view:cache
-```
 
-### 5. Set permissions
-```bash
-chmod -R 775 storage bootstrap/cache
-chown -R www-data:www-data storage bootstrap/cache
-```
+
 
 ##  Access
 
 - **URL**: https://nulinz.co.in/beta
-- **Database Port**: 3307 (host) → 3306 (container)
-- **PHP-FPM Port**: 9001 (host) → 9000 (container)
+
 
 ##  Docker Commands
 ```bash
@@ -68,9 +55,7 @@ docker-compose down
 # Restart containers
 docker-compose restart
 
-# View logs
-docker-compose logs -f app
-docker-compose logs -f mysql
+
 
 # Access container shell
 docker-compose exec app bash
@@ -127,17 +112,7 @@ docker-compose exec app composer update
 docker-compose exec app composer require vendor/package
 ```
 
-### Database
-```bash
-# Access MySQL
-docker-compose exec mysql mysql -u beta_user -p beta_db
 
-# Backup database
-docker-compose exec mysql mysqldump -u beta_user -p beta_db > backup.sql
-
-# Restore database
-docker-compose exec -T mysql mysql -u beta_user -p beta_db < backup.sql
-```
 
 ##  Deployment Workflow
 ```bash
@@ -150,31 +125,14 @@ docker-compose up -d --build
 # Install/update dependencies
 docker-compose exec app composer install --no-dev --optimize-autoloader
 
-# Run migrations
-docker-compose exec app php artisan migrate --force
-
-# Clear and cache configs
-docker-compose exec app php artisan config:cache
-docker-compose exec app php artisan route:cache
-docker-compose exec app php artisan view:cache
 
 # Set permissions
 chmod -R 775 storage bootstrap/cache
 chown -R www-data:www-data storage bootstrap/cache
 ```
 
-##  Troubleshooting
 
-### Container won't start
-```bash
-docker-compose down -v
-docker-compose up -d --build
-```
 
-### Database connection refused
-- Check if MySQL container is running: `docker-compose ps`
-- Verify `.env` has `DB_HOST=beta_mysql` (not 127.0.0.1)
-- Wait 10 seconds for MySQL to fully start
 
 ### Permission errors
 ```bash
@@ -185,10 +143,7 @@ chown -R www-data:www-data storage bootstrap/cache
 ### Clear all caches
 ```bash
 docker-compose exec app php artisan optimize:clear
-docker-compose exec app php artisan config:clear
-docker-compose exec app php artisan cache:clear
-docker-compose exec app php artisan route:clear
-docker-compose exec app php artisan view:clear
+
 ```
 
 ##  License
